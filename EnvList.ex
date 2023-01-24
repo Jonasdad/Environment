@@ -33,12 +33,10 @@ defmodule EnvList do
 
   def remove([], _) do [] end
   def remove([{key, value} | t], delete_key) do
-    if(key != delete_key) do
+    if(key != delete_key) do  #while delete_key != key, create the new list
       [{key, value}] ++ remove(t, delete_key)
-    else
+    else                      #if key == delete_key, ignore it and continue
       remove(t, delete_key)
     end
   end
-  # def remove([{key, value} | t], key) do t end
- # def remove([h | t], key) do [h | remove(t, key)]end
 end
