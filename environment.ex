@@ -1,17 +1,44 @@
 defmodule EnvList do
 
+  def test() do
+    list = EnvList.new()
+    a = EnvList.add(list, :a, 1)
+    b = EnvList.add(a, :b, 2)
+    c = EnvList.add(b, :c, 3)
+    EnvList.lookup(c, :c)
+    d = EnvList.remove(c, :a)
+    #IO.inspect(c = EnvList.add(b, :b, 18))
+  end
+
   #Return empty list
   def new() do [] end
   #Add - 3 cases - Empty, Key found -> update value, Key not found insert
   def add([], key, value) do [{key, value}] end #if list is empty -> do {key, value}
-  def add([h | t], key, value) do [h | add(t, key, value)] end #Traverse list recursively
-  def add([{key, _}| t], key ,value) do [{key, value} | t] end #update key
+  def add([{k, val}| t], key ,value) do
+    if(k == key) do #If matching keys -> update value
+        [{key, value} | t]
+    else            #If not matching keys -> append old list onto new list.
+      [{k, val}] ++ add(t, key, value)
+    end
+  end
 
   def lookup([], _) do nil end #key not present
-  def lookup([{key, _} | t ], key) do {key, value} end #key found -> return key-value pair
-  def lookup([_ | t], key) do lookup(t, key) end
+  def lookup([{key, value} | t ], find_key) do
+    if(key == find_key) do
+      {key, value} #key found -> return key-value pair
+    else
+      lookup(t, key) #key not found, keep traversing
+    end
+  end
 
-  def remove([], _) do [] end #Remove from empty list -> Empty list, []
-  def remove([{key, value} | t], key) do t end
-  def remove([h | t], key) do [h | remove(t, key)]end
+  def remove([], _) do [] end
+  def remove([{key, value} | t], delete_key) do
+    if(key != delete_key) do
+      [{key, value}] ++ remove(t, delete_key)
+    else
+      remove(t, delete_key)
+    end
+  end
+  # def remove([{key, value} | t], key) do t end
+ # def remove([h | t], key) do [h | remove(t, key)]end
 end
